@@ -77,15 +77,17 @@ def main():
     st.sidebar.caption("This is a completely un-biased view of our society. Please pick your choice freely without trying to skew the result")
     st.sidebar.markdown("---")
 
+    metrics_data = look_up_keys(config_filepath='src/config.json',op_type='read')
 
-    st.title('Vote for Today')
-    st.write('This is a web app for a random questions pick your answer.')
+    st.info('**What do you think?**',icon="💡")
+    st.sidebar.markdown("\n")
+    rand_topic = metrics_data['topics'][0]
+    st.title(f"{rand_topic}")
     
     col1, col2 = st.columns(2)
     left_column, right_column = st.columns(2)
     
 
-    metrics_data = look_up_keys(config_filepath='src/config.json',op_type='read')
     
     with left_column:
         pick_yes = st.button(
