@@ -36,12 +36,6 @@ def look_up_keys(**kwargs):
             json.dump(final_data,f)
     else:
         logging.error("error reading file")
-    # for key in args:
-    #     if key not in st.session_state:
-    #         if key=='run_date':
-    #             st.session_state[key] = datetime.today().date().isoformat()
-    #         else:
-    #             st.session_state[key] = 1
     
 def naive_choice(pick:int,xtra=None):
     return
@@ -58,6 +52,9 @@ def generate(choice:int,up_data):
             else:
                 up_data['data']['no']+=1
         else:
+            up_data['last'] = up_data['data']
+            up_data['last']['topic'] = up_data['topics'].pop(0)
+            up_data['last']['participation'] = up_data['data']['yes']+up_data['data']['no']
             up_data['date'] = ddate
             up_data['data']['yes']=1
             up_data['data']['no']=1
@@ -122,10 +119,13 @@ def main():
     with right_column:
         st.metric(label="No Picks", value=f'{int(n_count/(y_count+n_count)*100)}%',
             delta_color="off")
-    
-    # st.sidebar.write(f"Today: {st.session_state['run_date']}")
+    with st.sidebar:
+        st.code(f"Current participation: {y_count+n_count}")
     st.sidebar.markdown("--------")
-    st.sidebar.write(f"Current participation: {y_count+n_count}")
+    st.sidebar.subheader(f"Results for the last topic:")
+    with st.sidebar:
+        st.write(metrics_data['last'])
+    st.success("Done!")
     # st.sidebar.write(f"user: {st.session_state['session_id']}")
 
     # st.write("## Current Vote Count:",int(y_count+n_count))
